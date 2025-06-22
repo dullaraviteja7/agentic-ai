@@ -1,54 +1,24 @@
-# AI Scrum Master Agent Proposal
+# 🤖 AI Scrum Master Agent Proposal
 
-# 1. Objective
-
-To build an AI-powered Scrum Master Agent for each scrum team in a project that can autonomously handle key scrum responsibilities, enhance team collaboration, improve productivity visibility, and proactively manage risk and performance.
+## 🎯 Objective
+To build a production-grade AI-powered Scrum Master Agent that automates coordination tasks for each scrum team, integrates with collaboration tools like MS Teams and Jira, and provides real-time visibility to the Project Manager via dashboards.
 
 ---
 
-# 2. Key Responsibilities of the AI Scrum Master Agent
+## 🧩 Key Features & Requirements
 
-## 2.1 Scrum Event Management
-
-- Schedule sprint planning, grooming, daily stand-ups, retrospectives, bug triaging.
-    
-- Integrate with Microsoft Teams Calendar using Microsoft Graph API.
-    
-
-## 2.2 Intelligent Collaboration
-
-- Analyze voice in MS Teams meetings to extract action items for various roles (SA, BA/PO, QA, Dev, PM).
-    
-- Create tasks in Microsoft Teams Planner/To Do based on extracted insights.
-    
-
-## 2.3 Real-time Monitoring and Dashboarding
-
-- Aggregate task progress and completion data.
-    
-- Create and update real-time Grafana dashboards.
-    
-- Trigger escalations if progress stalls.
-    
-
-## 2.4 Configuration and Customization
-
-- Allow configuration of:
-    
-    - Team goals and sprint timelines
-        
-    - Member roles and responsibilities
-        
-    - Escalation levels and matrices
-        
-
-## 2.5 Predictive and Proactive AI Features
-
-- Predict task delays and potential blockers.
-    
-- Respond to team queries regarding ownership, dependencies, and process guidance.
-    
-- Provide feedback and appreciations based on performance trends.
+### ✅ Core Responsibilities
+1. **Schedule Scrum Ceremonies**: Sprint planning, grooming, daily standups, retrospectives, and triaging.
+2. **Voice & Chat Analysis**: Transcribe MS Teams meeting voice; use NLP to extract action items.
+3. **Task Creation**: Create and assign tasks in MS Teams (Planner), Jira, or other PM tools based on conversations.
+4. **Progress Tracking**: Monitor task status and due dates in real-time from MS Teams or Jira to measure progress.
+5. **Dashboards**: Feed structured data into Grafana to visualize sprint health and team metrics.
+6. **Real-time Monitoring & Escalation**: Trigger reminders or email escalations when tasks stall or miss deadlines.
+7. **Chat Assistant**: Answer team queries, provide contact points, task statuses, and suggest mitigations.
+8. **Predictive Feedback**: Offer data-driven feedback and highlight potential blockers to the Project Manager.
+9. **Host for Scrum Calls**: Agent can optionally act as the call host or use a bot runner via Teams to record and monitor.
+10. **Configurable Team Setup**: Set goals, members, roles, levels, sprint cadence, and escalation matrix.
+11. **Security & Compliance**: Role-based access control, audit logs, GDPR and ISO compliance.
     
 
 ---
@@ -122,6 +92,21 @@ To build an AI-powered Scrum Master Agent for each scrum team in a project that 
 |Escalation Layer|MS Teams Bot, Email API|
 |AI/LLM Agent|OpenAI GPT-4, Claude, Flan-T5|
 |Hosting|Azure, AWS Lambda, GCP Functions|
+
+---
+
+## 🧠 Team Structure
+
+| Role | Count | Skills Needed | Responsibilities |
+|------|-------|----------------|------------------|
+| **AI/ML Engineer** | 2 | Python, NLP (spaCy/Hugging Face), speech-to-text (Whisper/Azure), LLM fine-tuning | Voice-to-task pipeline, feedback analysis, Q&A agent |
+| **Backend Engineer** | 2 | Node.js/Java/Python, REST APIs, microservices, auth, async comms | Agent services, task manager, DB layer, APIs |
+| **Frontend Engineer** | 1 | React/Angular, UI/UX, real-time dashboards, Microsoft Teams UI extensions | Admin config panel, dashboards |
+| **DevOps Engineer** | 1 | Docker, Kubernetes, CI/CD, Azure/AWS | Deployment, monitoring, scalability |
+| **MS 365/Teams Developer** | 1 | MS Graph API, Teams Bot Framework, Planner API, Webhooks | Teams bot, task syncing |
+| **Solution Architect** | 1 | Cloud & microservices architecture | Design, reviews, governance |
+| **Project Manager** | 1 | Agile project management | Planning, reporting, tracking |
+| **QA / Test Automation** | 1 | Manual + automated testing, API, voice flow testing | QA cycles, validation, regression testing |
 
 ---
 
@@ -235,6 +220,7 @@ sequenceDiagram
     participant VoiceBot as Voice Analyst Agent
     participant NLP as NLP Extractor
     participant Tasks as Task Manager Agent
+    participant Planner as Jira / MS Planner
     participant DB as Data Store
     participant Dashboard as Dashboard Agent
 
@@ -242,10 +228,12 @@ sequenceDiagram
     Teams->>VoiceBot: Record Audio
     VoiceBot->>NLP: Transcribe + Extract Action Items
     NLP->>Tasks: Send Action Items (assignee, due date)
-    Tasks->>DB: Store task data
-    Tasks->>Teams: Create Planner Task
-    DB->>Dashboard: Feed progress updates
+    Tasks->>Planner: Create Task in Project Tool
+    Planner->>Tasks: Task Status / Due Date Updates
+    Tasks->>DB: Store task progress and updates
+    DB->>Dashboard: Feed updated data
     Dashboard->>PM: Real-time Visuals
+
 
 ```
 
@@ -257,6 +245,7 @@ graph LR
     B --> C[Voice Transcription & Analysis]
     C --> D[Action Items Extraction]
     D --> E[Task Creation in Teams / Jira]
+    A -->|Updates Task Status| E
     E --> F[Progress Tracking DB]
     F --> G[Grafana Dashboard]
     G --> H[Project Manager]
@@ -264,10 +253,8 @@ graph LR
     I -->|Reminders| A
     I -->|Escalation Email| H
     A -->|Asks Question| J[Chat Agent]
-    J -->|Query Tasks/Dependencies| F
+    J -->|Query Task Status| F
+
 
 ```
 
-# 10. Implementation References
-
-https://github.com/openai/openai-cs-agents-demo

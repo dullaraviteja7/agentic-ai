@@ -169,7 +169,7 @@ To build a production-grade AI-powered Scrum Master Agent that automates coordin
 
 ---
 
-# 9. Diagrams (To be created)
+# 9. Diagrams
 
 - **Architecture Diagram**
 
